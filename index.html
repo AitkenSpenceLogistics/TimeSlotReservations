@@ -494,31 +494,66 @@
   "Venora_Tel"
 ];
 
-  function getSuppliers() {
+function getSuppliers() {
 
-    const saved = localStorage.getItem("ASL_WH_Suppliers");
+  const saved = localStorage.getItem("ASL_WH_Suppliers");
 
-    if (!saved) {
-      localStorage.setItem(
-        "ASL_WH_Suppliers",
-        JSON.stringify(defaultSuppliers)
-      );
-
-      return [...defaultSuppliers];
-    }
-
-    try {
-      const suppliers = JSON.parse(saved);
-
-      if (Array.isArray(suppliers)) {
-        return suppliers;
-      }
-    } catch (error) {
-      console.error("Supplier data could not be read.", error);
-    }
-
+  // First time user
+  if (!saved) {
+    saveSuppliers(defaultSuppliers);
     return [...defaultSuppliers];
   }
+
+  try {
+
+    const savedSuppliers = JSON.parse(saved);
+
+    if (Array.isArray(savedSuppliers)) {
+
+      // Merge default suppliers with previously created suppliers
+      const allSuppliers = [
+        ...defaultSuppliers,
+        ...savedSuppliers
+      ];
+
+      // Remove duplicates (case-insensitive)
+      const uniqueSuppliers = [];
+
+      allSuppliers.forEach(supplier => {
+
+        const exists = uniqueSuppliers.some(
+          existing =>
+            existing.toLowerCase() === supplier.toLowerCase()
+        );
+
+        if (!exists) {
+          uniqueSuppliers.push(supplier);
+        }
+
+      });
+
+      // Sort alphabetically
+      uniqueSuppliers.sort((a, b) =>
+        a.localeCompare(b)
+      );
+
+      // Save updated list
+      saveSuppliers(uniqueSuppliers);
+
+      return uniqueSuppliers;
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Supplier data could not be read.",
+      error
+    );
+
+  }
+
+  return [...defaultSuppliers];
+}
 
   function saveSuppliers(suppliers) {
     localStorage.setItem(
