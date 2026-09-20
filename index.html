@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASL Time Slot Request</title>
+
+  <style>
+    :root {
+      --primary: #0059A0;
+      --secondary: #052C65;
+      --bg: #EAF2F8;
+      --border: #C8D2DC;
+      --danger: #D32F2F;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: var(--bg);
+      margin: 0;
+      padding: 15px;
+      color: #333;
+    }
+
+    .container {
+      max-width: 560px;
+      margin: 0 auto;
+      background: #FFF;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.10);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .header h2 {
+      margin: 4px 0;
+      color: var(--secondary);
+      font-size: 21px;
+    }
+
+    .header p {
+      margin: 0;
+      color: #666;
+      font-size: 13px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+
+    select,
+    input[type="date"],
+    input[type="text"],
+    input[type="file"],
+    textarea {
+      width: 100%;
+      padding: 10px 11px;
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      font-size: 15px;
+      background: #FFF;
+    }
+
+    select {
+      cursor: pointer;
+    }
+
+    textarea {
+      min-height: 82px;
+      resize: vertical;
+    }
+
+    .time-row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .time-row select {
+      flex: 1;
+    }
+
+    .time-separator {
+      font-size: 20px;
+      font-weight: 700;
+      color: #555;
+    }
+
+    .supplier-row {
+      display: flex;
+      gap: 7px;
+    }
+
+    .supplier-row select {
+      flex: 1;
+    }
+
+    .add-btn {
+      border: 1px solid var(--primary);
+      background: #FFF;
+      color: var(--primary);
+      border-radius: 5px;
+      padding: 0 14px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .add-btn:hover {
+      background: #EEF6FC;
+    }
+
+    .new-supplier-box {
+      margin-top: 8px;
+      display: none;
+      gap: 7px;
+    }
+
+    .new-supplier-box input {
+      flex: 1;
+    }
+
+    .small-btn {
+      border: none;
+      background: var(--primary);
+      color: #FFF;
+      border-radius: 5px;
+      padding: 0 12px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .cancel-btn {
+      border: 1px solid #AAA;
+      background: #FFF;
+      color: #555;
+      border-radius: 5px;
+      padding: 0 10px;
+      cursor: pointer;
+    }
+
+    .file-box {
+      border: 1px dashed var(--primary);
+      background: #F4F8FC;
+      padding: 12px;
+      border-radius: 5px;
+    }
+
+    .file-note {
+      margin-top: 6px;
+      font-size: 12px;
+      color: #666;
+    }
+
+    .template-link {
+      display: inline-block;
+      margin-top: 8px;
+      color: var(--primary);
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .template-link:hover {
+      text-decoration: underline;
+    }
+
+    .file-name {
+      margin-top: 7px;
+      font-size: 13px;
+      color: #333;
+      word-break: break-word;
+    }
+
+    .required {
+      color: var(--danger);
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 13px;
+      background: var(--primary);
+      color: #FFF;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 5px;
+    }
+
+    .submit-btn:hover {
+      background: var(--secondary);
+    }
+
+    .submit-btn:disabled {
+      background: #999;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <h2>ASL Time Slot Request</h2>
+    <p>Operational Task Scheduling</p>
+  </div>
+
+  <form id="schedulingForm">
+
+    <!-- Sub Segment -->
+    <div class="form-group">
+      <label for="subSegment">Sub Segment <span class="required">*</span></label>
+      <select id="subSegment" required>
+        <option value="">Select Sub Segment</option>
+        <option value="WH-Dikovita">WH-Dikovita</option>
+        <option value="WH-Mabola">WH-Mabola</option>
+      </select>
+    </div>
+
+    <!-- Task -->
+    <div class="form-group">
+      <label for="task">Task <span class="required">*</span></label>
+      <select id="task" required onchange="updateTaskCategories()">
+        <option value="">Select Task</option>
+        <option value="Inbound">Inbound</option>
+        <option value="Outbound">Outbound</option>
+      </select>
+    </div>
+
+    <!-- Task Category -->
+    <div class="form-group">
+      <label for="taskCategory">Task Category <span class="required">*</span></label>
+      <select id="taskCategory" required disabled>
+        <option value="">Select Task Category</option>
+      </select>
+    </div>
+
+    <!-- Supplier -->
+    <div class="form-group">
+      <label for="supplierName">Supplier Name <span class="required">*</span></label>
+
+      <div class="supplier-row">
+        <select id="supplierName" required onchange="supplierSelectionChanged()">
+          <option value="">Select Supplier</option>
+        </select>
+
+        <button type="button" class="add-btn" onclick="showNewSupplier()">
+          + New Supplier
+        </button>
+      </div>
+
+      <div id="newSupplierBox" class="new-supplier-box">
+        <input
+          type="text"
+          id="newSupplierName"
+          placeholder="Enter new supplier name"
+          maxlength="150"
+        >
+        <button type="button" class="small-btn" onclick="saveNewSupplier()">
+          Add
+        </button>
+        <button type="button" class="cancel-btn" onclick="cancelNewSupplier()">
+          Cancel
+        </button>
+      </div>
+    </div>
+
+    <!-- Scheduled Date -->
+    <div class="form-group">
+      <label for="scheduledDate">Scheduled Date <span class="required">*</span></label>
+      <input type="date" id="scheduledDate" required>
+    </div>
+
+    <!-- Scheduled Time Slot -->
+    <div class="form-group">
+      <label>Prefered Time Slot <span class="required">*</span></label>
+      <div class="time-row">
+        <select id="scheduledHour" required>
+          <option value="">HH</option>
+        </select>
+
+        <span class="time-separator">:</span>
+
+        <select id="scheduledMinute" required>
+          <option value="">mm</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Remarks - Optional -->
+    <div class="form-group">
+      <label for="remarks">Remarks</label>
+      <textarea id="remarks" placeholder="Remarks"></textarea>
+    </div>
+
+    <!-- Mandatory Excel Attachment -->
+    <div class="form-group">
+      <label for="excelAttachment">
+        Excel Attachment <span class="required">*</span>
+      </label>
+
+      <div class="file-box">
+        <input
+          type="file"
+          id="excelAttachment"
+          accept=".xlsx,.xls,.xlsm"
+          required
+          onchange="excelSelected(this)"
+        >
+
+        <div class="file-note">
+          Excel attachment is mandatory. Allowed files: .xlsx, .xls, .xlsm
+        </div>
+
+        <a
+          class="template-link"
+          href="Excel Template for Material Returns.xlsx"
+          download
+        >
+          Download Excel Template
+        </a>
+
+        <div id="excelFileName" class="file-name"></div>
+      </div>
+    </div>
+
+    <button type="button" class="submit-btn" id="submitBtn" onclick="submitData()">
+      SUBMIT
+    </button>
+
+  </form>
+
+</div>
+
+<script>
+
+  // =========================================================
+  // Task Category Mapping
+  // =========================================================
+  const taskCategories = [
+    {
+      Task: "Inbound",
+      Value: "Return"
+    },
+    {
+      Task: "Inbound",
+      Value: "PO"
+    },
+    {
+      Task: "Inbound",
+      Value: "Goods Receive"
+    },
+    {
+      Task: "Outbound",
+      Value: "Goods Issue"
+    },
+    {
+      Task: "Outbound",
+      Value: "Transfer"
+    },
+    {
+      Task: "Outbound",
+      Value: "Disposal"
+    }
+  ];
+
+  // =========================================================
+  // Time dropdowns
+  // =========================================================
+  const hourSelect = document.getElementById("scheduledHour");
+  const minuteSelect = document.getElementById("scheduledMinute");
+
+  for (let h = 0; h <= 23; h++) {
+    const option = document.createElement("option");
+    option.value = String(h).padStart(2, "0");
+    option.textContent = String(h).padStart(2, "0");
+    hourSelect.appendChild(option);
+  }
+
+  for (let m = 0; m <= 59; m++) {
+    const option = document.createElement("option");
+    option.value = String(m).padStart(2, "0");
+    option.textContent = String(m).padStart(2, "0");
+    minuteSelect.appendChild(option);
+  }
+
+  // =========================================================
+  // Task Category - Filter based on selected Task
+  // =========================================================
+  function updateTaskCategories() {
+
+    const task = document.getElementById("task").value;
+    const categorySelect = document.getElementById("taskCategory");
+
+    categorySelect.innerHTML =
+      '<option value="">Select Task Category</option>';
+
+    if (!task) {
+      categorySelect.disabled = true;
+      return;
+    }
+
+    const categories = taskCategories.filter(
+      item => item.Task === task
+    );
+
+    categories.forEach(item => {
+      const option = document.createElement("option");
+      option.value = item.Value;
+      option.textContent = item.Value;
+      categorySelect.appendChild(option);
+    });
+
+    categorySelect.disabled = false;
+  }
+
+  // =========================================================
+  // Supplier Management
+  //
+  // Created suppliers are stored in localStorage so they
+  // remain available for future use on the same browser/device.
+  // =========================================================
+  const defaultSuppliers = [
+    "Aquasky"
+  ];
+
+  function getSuppliers() {
+
+    const saved = localStorage.getItem("ASL_WH_Suppliers");
+
+    if (!saved) {
+      localStorage.setItem(
+        "ASL_WH_Suppliers",
+        JSON.stringify(defaultSuppliers)
+      );
+
+      return [...defaultSuppliers];
+    }
+
+    try {
+      const suppliers = JSON.parse(saved);
+
+      if (Array.isArray(suppliers)) {
+        return suppliers;
+      }
+    } catch (error) {
+      console.error("Supplier data could not be read.", error);
+    }
+
+    return [...defaultSuppliers];
+  }
+
+  function saveSuppliers(suppliers) {
+    localStorage.setItem(
+      "ASL_WH_Suppliers",
+      JSON.stringify(suppliers)
+    );
+  }
+
+  function loadSuppliers() {
+
+    const supplierSelect = document.getElementById("supplierName");
+    const currentValue = supplierSelect.value;
+
+    supplierSelect.innerHTML =
+      '<option value="">Select Supplier</option>';
+
+    getSuppliers().forEach(supplier => {
+      const option = document.createElement("option");
+      option.value = supplier;
+      option.textContent = supplier;
+      supplierSelect.appendChild(option);
+    });
+
+    if (currentValue && getSuppliers().includes(currentValue)) {
+      supplierSelect.value = currentValue;
+    }
+  }
+
+  function showNewSupplier() {
+    const box = document.getElementById("newSupplierBox");
+
+    box.style.display = "flex";
+
+    document.getElementById("newSupplierName").value = "";
+    document.getElementById("newSupplierName").focus();
+  }
+
+  function cancelNewSupplier() {
+    document.getElementById("newSupplierBox").style.display = "none";
+    document.getElementById("newSupplierName").value = "";
+  }
+
+  function saveNewSupplier() {
+
+    const input = document.getElementById("newSupplierName");
+    const supplierName = input.value.trim();
+
+    if (!supplierName) {
+      alert("Please enter a supplier name.");
+      input.focus();
+      return;
+    }
+
+    const suppliers = getSuppliers();
+
+    const existing = suppliers.find(
+      supplier => supplier.toLowerCase() === supplierName.toLowerCase()
+    );
+
+    if (existing) {
+      alert("This supplier already exists.");
+      document.getElementById("supplierName").value = existing;
+      cancelNewSupplier();
+      return;
+    }
+
+    suppliers.push(supplierName);
+    suppliers.sort((a, b) => a.localeCompare(b));
+
+    saveSuppliers(suppliers);
+    loadSuppliers();
+
+    document.getElementById("supplierName").value = supplierName;
+
+    cancelNewSupplier();
+
+    alert("Supplier added successfully and saved for future use.");
+  }
+
+  function supplierSelectionChanged() {
+    // Supplier selection is already handled by the dropdown.
+  }
+
+  // Load suppliers when page opens.
+  loadSuppliers();
+
+  // =========================================================
+  // Excel attachment
+  // =========================================================
+  let selectedExcelFile = null;
+
+  function excelSelected(input) {
+
+    const file = input.files[0];
+
+    if (!file) {
+      selectedExcelFile = null;
+      document.getElementById("excelFileName").innerText = "";
+      return;
+    }
+
+    const allowedExtensions = [".xlsx", ".xls", ".xlsm"];
+    const fileName = file.name.toLowerCase();
+
+    const valid = allowedExtensions.some(
+      ext => fileName.endsWith(ext)
+    );
+
+    if (!valid) {
+      alert("Please select an Excel file (.xlsx, .xls, or .xlsm).");
+
+      input.value = "";
+      selectedExcelFile = null;
+
+      document.getElementById("excelFileName").innerText = "";
+      return;
+    }
+
+    selectedExcelFile = file;
+
+    document.getElementById("excelFileName").innerText =
+      "📎 " + file.name;
+  }
+
+  // =========================================================
+  // Convert file to Base64
+  // =========================================================
+  const toBase64 = file => new Promise((resolve, reject) => {
+
+    const reader = new FileReader();
+
+    reader.readAsDataURL(file);
+
+    reader.onload = () => {
+      resolve(reader.result.split(",")[1]);
+    };
+
+    reader.onerror = error => reject(error);
+  });
+
+  // =========================================================
+  // Submit
+  // =========================================================
+  async function submitData() {
+
+    const form = document.getElementById("schedulingForm");
+
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+
+    if (!selectedExcelFile) {
+      alert("Please attach the required Excel file.");
+      document.getElementById("excelAttachment").focus();
+      return;
+    }
+
+    const submitBtn = document.getElementById("submitBtn");
+
+    submitBtn.disabled = true;
+    submitBtn.innerText = "SUBMITTING...";
+
+    try {
+
+      const excelBase64 = await toBase64(selectedExcelFile);
+
+      const scheduledDate =
+        document.getElementById("scheduledDate").value;
+
+      const scheduledHour =
+        document.getElementById("scheduledHour").value;
+
+      const scheduledMinute =
+        document.getElementById("scheduledMinute").value;
+
+      const payload = {
+
+        SubSegment:
+          document.getElementById("subSegment").value,
+
+        Task:
+          document.getElementById("task").value,
+
+        TaskCategory:
+          document.getElementById("taskCategory").value,
+
+        SupplierName:
+          document.getElementById("supplierName").value,
+
+        ScheduledDate:
+          scheduledDate,
+
+        ScheduledTime:
+          scheduledHour + ":" + scheduledMinute,
+
+        Remarks:
+          document.getElementById("remarks").value.trim(),
+
+        ExcelFileName:
+          selectedExcelFile.name,
+
+        ExcelFileType:
+          selectedExcelFile.type ||
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+
+        ExcelFileContent:
+          excelBase64
+      };
+
+      // Existing Power Automate endpoint.
+      const powerAutomateUrl =
+        "https://default9a6490bbfe8f4efe8f5ae093648e82.35.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/15/workflows/e68e3512303e4c338d5fcdeb03c09786/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=KoMBrglBYqPhhyKuzNL8wCKaNxhYn1_HMyeX0n2LGmQ";
+
+      const response = await fetch(powerAutomateUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (response.ok || response.status === 202) {
+
+        alert("Submitted successfully.");
+
+        form.reset();
+
+        selectedExcelFile = null;
+
+        document.getElementById("excelFileName").innerText = "";
+
+        document.getElementById("taskCategory").innerHTML =
+          '<option value="">Select Task Category</option>';
+
+        document.getElementById("taskCategory").disabled = true;
+
+        loadSuppliers();
+
+      } else {
+
+        alert("Submission failed. Please try again.");
+      }
+
+    } catch (error) {
+
+      console.error(error);
+
+      alert(
+        "Error connecting to server. Please check the connection."
+      );
+
+    } finally {
+
+      submitBtn.disabled = false;
+      submitBtn.innerText = "SUBMIT";
+    }
+  }
+
+</script>
+
+</body>
+</html>
