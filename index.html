@@ -78,11 +78,6 @@
       cursor: pointer;
     }
 
-    textarea {
-      min-height: 82px;
-      resize: vertical;
-    }
-
     .time-row {
       display: flex;
       align-items: center;
@@ -237,18 +232,10 @@
     <!-- Task -->
     <div class="form-group">
       <label for="task">Task <span class="required">*</span></label>
-      <select id="task" required onchange="updateTaskCategories()">
+      <select id="task" required>
         <option value="">Select Task</option>
         <option value="Inbound">Inbound</option>
         <option value="Outbound">Outbound</option>
-      </select>
-    </div>
-
-    <!-- Task Category -->
-    <div class="form-group">
-      <label for="taskCategory">Task Category <span class="required">*</span></label>
-      <select id="taskCategory" required disabled>
-        <option value="">Select Task Category</option>
       </select>
     </div>
 
@@ -304,12 +291,6 @@
       </div>
     </div>
 
-    <!-- Remarks - Optional -->
-    <div class="form-group">
-      <label for="remarks">Remarks</label>
-      <textarea id="remarks" placeholder="Remarks"></textarea>
-    </div>
-
     <!-- Mandatory Excel Attachment -->
     <div class="form-group">
       <label for="excelAttachment">
@@ -358,86 +339,6 @@
 </div>
 
 <script>
-
-  // =========================================================
-  // Task Category Mapping
-  // =========================================================
-  const taskCategories = [
-    {
-      Task: "Inbound",
-      Value: "Return"
-    },
-    {
-      Task: "Inbound",
-      Value: "PO"
-    },
-    {
-      Task: "Inbound",
-      Value: "Goods Receive"
-    },
-    {
-      Task: "Outbound",
-      Value: "Goods Issue"
-    },
-    {
-      Task: "Outbound",
-      Value: "Transfer"
-    },
-    {
-      Task: "Outbound",
-      Value: "Disposal"
-    }
-  ];
-
-  // =========================================================
-  // Time dropdowns
-  // =========================================================
-  const hourSelect = document.getElementById("scheduledHour");
-  const minuteSelect = document.getElementById("scheduledMinute");
-
-  for (let h = 0; h <= 23; h++) {
-    const option = document.createElement("option");
-    option.value = String(h).padStart(2, "0");
-    option.textContent = String(h).padStart(2, "0");
-    hourSelect.appendChild(option);
-  }
-
-  for (let m = 0; m <= 59; m++) {
-    const option = document.createElement("option");
-    option.value = String(m).padStart(2, "0");
-    option.textContent = String(m).padStart(2, "0");
-    minuteSelect.appendChild(option);
-  }
-
-  // =========================================================
-  // Task Category - Filter based on selected Task
-  // =========================================================
-  function updateTaskCategories() {
-
-    const task = document.getElementById("task").value;
-    const categorySelect = document.getElementById("taskCategory");
-
-    categorySelect.innerHTML =
-      '<option value="">Select Task Category</option>';
-
-    if (!task) {
-      categorySelect.disabled = true;
-      return;
-    }
-
-    const categories = taskCategories.filter(
-      item => item.Task === task
-    );
-
-    categories.forEach(item => {
-      const option = document.createElement("option");
-      option.value = item.Value;
-      option.textContent = item.Value;
-      categorySelect.appendChild(option);
-    });
-
-    categorySelect.disabled = false;
-  }
 
   // =========================================================
   // Supplier Management
@@ -738,9 +639,6 @@ function getSuppliers() {
         Task:
           document.getElementById("task").value,
 
-        TaskCategory:
-          document.getElementById("taskCategory").value,
-
         SupplierName:
           document.getElementById("supplierName").value,
 
@@ -749,9 +647,6 @@ function getSuppliers() {
 
         ScheduledTime:
           scheduledHour + ":" + scheduledMinute,
-
-        Remarks:
-          document.getElementById("remarks").value.trim(),
 
         ExcelFileName:
           selectedExcelFile.name,
@@ -785,11 +680,6 @@ function getSuppliers() {
         selectedExcelFile = null;
 
         document.getElementById("excelFileName").innerText = "";
-
-        document.getElementById("taskCategory").innerHTML =
-          '<option value="">Select Task Category</option>';
-
-        document.getElementById("taskCategory").disabled = true;
 
         loadSuppliers();
 
