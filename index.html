@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>ASL Time Slot Request</title>
 
   <style>
@@ -14,7 +16,9 @@
       --danger: #D32F2F;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
@@ -30,7 +34,7 @@
       background: #FFF;
       padding: 20px;
       border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.10);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.10);
     }
 
     .header {
@@ -64,8 +68,7 @@
     select,
     input[type="date"],
     input[type="text"],
-    input[type="file"],
-    textarea {
+    input[type="file"] {
       width: 100%;
       padding: 10px 11px;
       border: 1px solid var(--border);
@@ -206,504 +209,1029 @@
       cursor: not-allowed;
     }
   </style>
+
 </head>
 
 <body>
 
-<div class="container">
+  <div class="container">
 
-  <div class="header">
-    <h2>ASL Time Slot Request</h2>
-    <p>Operational Task Scheduling</p>
-  </div>
-
-  <form id="schedulingForm">
-
-    <!-- Sub Segment -->
-    <div class="form-group">
-      <label for="subSegment">Sub Segment <span class="required">*</span></label>
-      <select id="subSegment" required>
-        <option value="">Select Sub Segment</option>
-        <option value="WH-Dikovita">WH-Dikovita</option>
-        <option value="WH-Mabola">WH-Mabola</option>
-      </select>
+    <div class="header">
+      <h2>ASL Time Slot Request</h2>
+      <p>Operational Task Scheduling</p>
     </div>
 
-    <!-- Task -->
-    <div class="form-group">
-      <label for="task">Task <span class="required">*</span></label>
-      <select id="task" required>
-        <option value="">Select Task</option>
-        <option value="Inbound">Inbound</option>
-        <option value="Outbound">Outbound</option>
-      </select>
-    </div>
+    <form id="schedulingForm">
 
-    <!-- Supplier -->
-    <div class="form-group">
-      <label for="supplierName">Supplier Name <span class="required">*</span></label>
+      <!-- Sub Segment -->
+      <div class="form-group">
 
-      <div class="supplier-row">
-        <select id="supplierName" required onchange="supplierSelectionChanged()">
-          <option value="">Select Supplier</option>
+        <label for="subSegment">
+          Sub Segment <span class="required">*</span>
+        </label>
+
+        <select id="subSegment" required>
+
+          <option value="">
+            Select Sub Segment
+          </option>
+
+          <option value="WH-Dikovita">
+            WH-Dikovita
+          </option>
+
+          <option value="WH-Mabola">
+            WH-Mabola
+          </option>
+
         </select>
 
-        <button type="button" class="add-btn" onclick="showNewSupplier()">
-          + New Supplier
-        </button>
       </div>
 
-      <div id="newSupplierBox" class="new-supplier-box">
-        <input
-          type="text"
-          id="newSupplierName"
-          placeholder="Enter new supplier name"
-          maxlength="150"
-        >
-        <button type="button" class="small-btn" onclick="saveNewSupplier()">
-          Add
-        </button>
-        <button type="button" class="cancel-btn" onclick="cancelNewSupplier()">
-          Cancel
-        </button>
-      </div>
-    </div>
 
-    <!-- Scheduled Date -->
-    <div class="form-group">
-      <label for="scheduledDate">Scheduled Date <span class="required">*</span></label>
-      <input type="date" id="scheduledDate" required>
-    </div>
+      <!-- Task -->
+      <div class="form-group">
 
-    <!-- Scheduled Time Slot -->
-    <div class="form-group">
-      <label>Prefered Time Slot <span class="required">*</span></label>
-      <div class="time-row">
-        <select id="scheduledHour" required>
-          <option value="">HH</option>
+        <label for="task">
+          Task <span class="required">*</span>
+        </label>
+
+        <select id="task" required>
+
+          <option value="">
+            Select Task
+          </option>
+
+          <option value="Inbound">
+            Inbound
+          </option>
+
+          <option value="Outbound">
+            Outbound
+          </option>
+
         </select>
 
-        <span class="time-separator">:</span>
-
-        <select id="scheduledMinute" required>
-          <option value="">mm</option>
-        </select>
       </div>
-    </div>
 
-    <!-- Mandatory Excel Attachment -->
-    <div class="form-group">
-      <label for="excelAttachment">
-        Excel Attachment <span class="required">*</span>
-      </label>
 
-      <div class="file-box">
-        <input
-          type="file"
-          id="excelAttachment"
-          accept=".xlsx,.xls,.xlsm"
-          required
-          onchange="excelSelected(this)"
-        >
+      <!-- Supplier -->
+      <div class="form-group">
 
-        <div class="file-note">
-          Excel attachment is mandatory. Allowed files: .xlsx, .xls, .xlsm
+        <label for="supplierName">
+          Supplier Name <span class="required">*</span>
+        </label>
+
+        <div class="supplier-row">
+
+          <select
+            id="supplierName"
+            required
+            onchange="supplierSelectionChanged()"
+          >
+
+            <option value="">
+              Select Supplier
+            </option>
+
+          </select>
+
+          <button
+            type="button"
+            class="add-btn"
+            onclick="showNewSupplier()"
+          >
+            + New Supplier
+          </button>
+
         </div>
 
-        <a
-          class="template-link"
-          href="Excel Template for Material Returns.xlsx"
-          download
-        >
-          Download Material Return Excel Template
-        </a>
-        <a
-          class="template-link"
-          href="Material Collection.xlsx"
-          download
-        >
-          Download Material Collection Excel Template
-        </a>
 
-        <div id="excelFileName" class="file-name"></div>
+        <div
+          id="newSupplierBox"
+          class="new-supplier-box"
+        >
+
+          <input
+            type="text"
+            id="newSupplierName"
+            placeholder="Enter new supplier name"
+            maxlength="150"
+          >
+
+          <button
+            type="button"
+            class="small-btn"
+            onclick="saveNewSupplier()"
+          >
+            Add
+          </button>
+
+          <button
+            type="button"
+            class="cancel-btn"
+            onclick="cancelNewSupplier()"
+          >
+            Cancel
+          </button>
+
+        </div>
+
       </div>
-      
-    </div>
 
-    <button type="button" class="submit-btn" id="submitBtn" onclick="submitData()">
-      SUBMIT
-    </button>
 
-  </form>
+      <!-- Scheduled Date -->
+      <div class="form-group">
 
-</div>
+        <label for="scheduledDate">
+          Scheduled Date <span class="required">*</span>
+        </label>
 
-<script>
+        <input
+          type="date"
+          id="scheduledDate"
+          required
+        >
 
-  // =========================================================
-  // Supplier Management
-  //
-  // Created suppliers are stored in localStorage so they
-  // remain available for future use on the same browser/device.
-  // =========================================================
-  const defaultSuppliers = [
-  "Advantis",
-  "Aquasky",
-  "Arctic",
-  "ATCA",
-  "ATSL",
-  "AVANTA",
-  "BROWNS",
-  "CODEC",
-  "COMMECH ENG",
-  "DAR_E_COM",
-  "DE MAX",
-  "DIALOG EMP",
-  "ECO",
-  "Oviklo",
-  "ESLL",
-  "ETEL",
-  "FAME",
-  "G TEC",
-  "GA TEC",
-  "Green Tec",
-  "HAYLEYS",
-  "INTEL",
-  "MOBIZZ",
-  "ITES",
-  "KTEC",
-  "L3 TEC",
-  "LDN ENG",
-  "MIT",
-  "NABLE",
-  "NCINGA",
-  "NMI",
-  "ONNEXTA",
-  "OXCENTURE",
-  "POWER COM",
-  "PRIME",
-  "RNG",
-  "SARASI",
-  "SCAN ENG",
-  "SEIRRA",
-  "SL COM",
-  "SUPERFINE",
-  "TECGATE",
-  "TELECTRA",
-  "TOOWAY",
-  "UNITEL",
-  "Venora_Tel"
-];
+      </div>
 
-function getSuppliers() {
 
-  const saved = localStorage.getItem("ASL_WH_Suppliers");
+      <!-- Scheduled Time Slot -->
+      <div class="form-group">
 
-  // First time user
-  if (!saved) {
-    saveSuppliers(defaultSuppliers);
-    return [...defaultSuppliers];
-  }
+        <label>
+          Preferred Time Slot <span class="required">*</span>
+        </label>
 
-  try {
+        <div class="time-row">
 
-    const savedSuppliers = JSON.parse(saved);
+          <select
+            id="scheduledHour"
+            required
+          >
 
-    if (Array.isArray(savedSuppliers)) {
+            <option
+              value=""
+              selected
+              disabled
+            >
+              HH
+            </option>
 
-      // Merge default suppliers with previously created suppliers
-      const allSuppliers = [
-        ...defaultSuppliers,
-        ...savedSuppliers
-      ];
+          </select>
 
-      // Remove duplicates (case-insensitive)
-      const uniqueSuppliers = [];
+          <span class="time-separator">
+            :
+          </span>
 
-      allSuppliers.forEach(supplier => {
+          <select
+            id="scheduledMinute"
+            required
+          >
 
-        const exists = uniqueSuppliers.some(
-          existing =>
-            existing.toLowerCase() === supplier.toLowerCase()
-        );
+            <option
+              value=""
+              selected
+              disabled
+            >
+              MM
+            </option>
 
-        if (!exists) {
-          uniqueSuppliers.push(supplier);
+          </select>
+
+        </div>
+
+      </div>
+
+
+      <!-- Mandatory Excel Attachment -->
+      <div class="form-group">
+
+        <label for="excelAttachment">
+
+          Excel Attachment
+          <span class="required">*</span>
+
+        </label>
+
+        <div class="file-box">
+
+          <input
+            type="file"
+            id="excelAttachment"
+            accept=".xlsx,.xls,.xlsm"
+            required
+            onchange="excelSelected(this)"
+          >
+
+          <div class="file-note">
+
+            Excel attachment is mandatory.
+            Allowed files: .xlsx, .xls, .xlsm
+
+          </div>
+
+
+          <a
+            class="template-link"
+            href="Excel Template for Material Returns.xlsx"
+            download
+          >
+            Download Material Return Excel Template
+          </a>
+
+
+          <a
+            class="template-link"
+            href="Material Collection.xlsx"
+            download
+          >
+            Download Material Collection Excel Template
+          </a>
+
+
+          <div
+            id="excelFileName"
+            class="file-name"
+          ></div>
+
+        </div>
+
+      </div>
+
+
+      <!-- Submit -->
+      <button
+        type="button"
+        class="submit-btn"
+        id="submitBtn"
+        onclick="submitData()"
+      >
+        SUBMIT
+      </button>
+
+    </form>
+
+  </div>
+
+
+  <script>
+
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      function () {
+
+        const hourSelect =
+          document.getElementById("scheduledHour");
+
+        const minuteSelect =
+          document.getElementById("scheduledMinute");
+
+
+
+
+        for (let h = 0; h <= 23; h++) {
+
+          const option =
+            document.createElement("option");
+
+          option.value =
+            String(h).padStart(2, "0");
+
+          option.textContent =
+            String(h).padStart(2, "0");
+
+          hourSelect.appendChild(option);
+
         }
 
-      });
 
-      // Sort alphabetically
-      uniqueSuppliers.sort((a, b) =>
-        a.localeCompare(b)
+
+        for (let m = 0; m <= 59; m++) {
+
+          const option =
+            document.createElement("option");
+
+          option.value =
+            String(m).padStart(2, "0");
+
+          option.textContent =
+            String(m).padStart(2, "0");
+
+          minuteSelect.appendChild(option);
+
+        }
+
+      }
+    );
+
+
+    // =========================================================
+    // Supplier Management
+    // =========================================================
+
+    const defaultSuppliers = [
+
+      "Advantis",
+      "Aquasky",
+      "Arctic",
+      "ATCA",
+      "ATSL",
+      "AVANTA",
+      "BROWNS",
+      "CODEC",
+      "COMMECH ENG",
+      "DAR_E_COM",
+      "DE MAX",
+      "DIALOG EMP",
+      "ECO",
+      "Oviklo",
+      "ESLL",
+      "ETEL",
+      "FAME",
+      "G TEC",
+      "GA TEC",
+      "Green Tec",
+      "HAYLEYS",
+      "INTEL",
+      "MOBIZZ",
+      "ITES",
+      "KTEC",
+      "L3 TEC",
+      "LDN ENG",
+      "MIT",
+      "NABLE",
+      "NCINGA",
+      "NMI",
+      "ONNEXTA",
+      "OXCENTURE",
+      "POWER COM",
+      "PRIME",
+      "RNG",
+      "SARASI",
+      "SCAN ENG",
+      "SEIRRA",
+      "SL COM",
+      "SUPERFINE",
+      "TECGATE",
+      "TELECTRA",
+      "TOOWAY",
+      "UNITEL",
+      "Venora_Tel"
+
+    ];
+
+
+
+    function getSuppliers() {
+
+      const saved =
+        localStorage.getItem(
+          "ASL_WH_Suppliers"
+        );
+
+
+      // First time
+      if (!saved) {
+
+        saveSuppliers(defaultSuppliers);
+
+        return [...defaultSuppliers];
+
+      }
+
+
+      try {
+
+        const savedSuppliers =
+          JSON.parse(saved);
+
+
+        if (Array.isArray(savedSuppliers)) {
+
+          // Merge defaults and saved suppliers
+          const allSuppliers = [
+
+            ...defaultSuppliers,
+
+            ...savedSuppliers
+
+          ];
+
+
+          // Remove duplicates
+          const uniqueSuppliers = [];
+
+
+          allSuppliers.forEach(
+            supplier => {
+
+              const exists =
+                uniqueSuppliers.some(
+                  existing =>
+                    existing.toLowerCase() ===
+                    supplier.toLowerCase()
+                );
+
+
+              if (!exists) {
+
+                uniqueSuppliers.push(
+                  supplier
+                );
+
+              }
+
+            }
+          );
+
+
+          // Sort
+          uniqueSuppliers.sort(
+            (a, b) =>
+              a.localeCompare(b)
+          );
+
+
+          // Save
+          saveSuppliers(
+            uniqueSuppliers
+          );
+
+
+          return uniqueSuppliers;
+
+        }
+
+      }
+      catch (error) {
+
+        console.error(
+          "Supplier data could not be read.",
+          error
+        );
+
+      }
+
+
+      return [...defaultSuppliers];
+
+    }
+
+
+
+    function saveSuppliers(suppliers) {
+
+      localStorage.setItem(
+        "ASL_WH_Suppliers",
+        JSON.stringify(suppliers)
       );
 
-      // Save updated list
-      saveSuppliers(uniqueSuppliers);
-
-      return uniqueSuppliers;
     }
 
-  } catch (error) {
 
-    console.error(
-      "Supplier data could not be read.",
-      error
-    );
 
-  }
 
-  return [...defaultSuppliers];
-}
+    function loadSuppliers() {
 
-  function saveSuppliers(suppliers) {
-    localStorage.setItem(
-      "ASL_WH_Suppliers",
-      JSON.stringify(suppliers)
-    );
-  }
+      const supplierSelect =
+        document.getElementById(
+          "supplierName"
+        );
 
-  function loadSuppliers() {
 
-    const supplierSelect = document.getElementById("supplierName");
-    const currentValue = supplierSelect.value;
+      const currentValue =
+        supplierSelect.value;
 
-    supplierSelect.innerHTML =
-      '<option value="">Select Supplier</option>';
 
-    getSuppliers().forEach(supplier => {
-      const option = document.createElement("option");
-      option.value = supplier;
-      option.textContent = supplier;
-      supplierSelect.appendChild(option);
-    });
+      supplierSelect.innerHTML =
+        '<option value="">Select Supplier</option>';
 
-    if (currentValue && getSuppliers().includes(currentValue)) {
-      supplierSelect.value = currentValue;
-    }
-  }
 
-  function showNewSupplier() {
-    const box = document.getElementById("newSupplierBox");
+      getSuppliers().forEach(
+        supplier => {
 
-    box.style.display = "flex";
+          const option =
+            document.createElement("option");
 
-    document.getElementById("newSupplierName").value = "";
-    document.getElementById("newSupplierName").focus();
-  }
+          option.value =
+            supplier;
 
-  function cancelNewSupplier() {
-    document.getElementById("newSupplierBox").style.display = "none";
-    document.getElementById("newSupplierName").value = "";
-  }
+          option.textContent =
+            supplier;
 
-  function saveNewSupplier() {
+          supplierSelect.appendChild(
+            option
+          );
 
-    const input = document.getElementById("newSupplierName");
-    const supplierName = input.value.trim();
+        }
+      );
 
-    if (!supplierName) {
-      alert("Please enter a supplier name.");
-      input.focus();
-      return;
+
+      if (
+        currentValue &&
+        getSuppliers().includes(
+          currentValue
+        )
+      ) {
+
+        supplierSelect.value =
+          currentValue;
+
+      }
+
     }
 
-    const suppliers = getSuppliers();
 
-    const existing = suppliers.find(
-      supplier => supplier.toLowerCase() === supplierName.toLowerCase()
-    );
 
-    if (existing) {
-      alert("This supplier already exists.");
-      document.getElementById("supplierName").value = existing;
+    function showNewSupplier() {
+
+      const box =
+        document.getElementById(
+          "newSupplierBox"
+        );
+
+
+      box.style.display =
+        "flex";
+
+
+      document.getElementById(
+        "newSupplierName"
+      ).value = "";
+
+
+      document.getElementById(
+        "newSupplierName"
+      ).focus();
+
+    }
+
+
+
+
+    function cancelNewSupplier() {
+
+      document.getElementById(
+        "newSupplierBox"
+      ).style.display = "none";
+
+
+      document.getElementById(
+        "newSupplierName"
+      ).value = "";
+
+    }
+
+
+
+    function saveNewSupplier() {
+
+      const input =
+        document.getElementById(
+          "newSupplierName"
+        );
+
+
+      const supplierName =
+        input.value.trim();
+
+
+      if (!supplierName) {
+
+        alert(
+          "Please enter a supplier name."
+        );
+
+        input.focus();
+
+        return;
+
+      }
+
+
+      const suppliers =
+        getSuppliers();
+
+
+      const existing =
+        suppliers.find(
+          supplier =>
+            supplier.toLowerCase() ===
+            supplierName.toLowerCase()
+        );
+
+
+      if (existing) {
+
+        alert(
+          "This supplier already exists."
+        );
+
+
+        document.getElementById(
+          "supplierName"
+        ).value = existing;
+
+
+        cancelNewSupplier();
+
+        return;
+
+      }
+
+
+      suppliers.push(
+        supplierName
+      );
+
+
+      suppliers.sort(
+        (a, b) =>
+          a.localeCompare(b)
+      );
+
+
+      saveSuppliers(
+        suppliers
+      );
+
+
+      loadSuppliers();
+
+
+      document.getElementById(
+        "supplierName"
+      ).value =
+        supplierName;
+
+
       cancelNewSupplier();
-      return;
+
+
+      alert(
+        "Supplier added successfully and saved for future use."
+      );
+
     }
 
-    suppliers.push(supplierName);
-    suppliers.sort((a, b) => a.localeCompare(b));
 
-    saveSuppliers(suppliers);
-    loadSuppliers();
+    function supplierSelectionChanged() {
 
-    document.getElementById("supplierName").value = supplierName;
+      // Supplier selection is handled
+      // directly by the dropdown.
 
-    cancelNewSupplier();
-
-    alert("Supplier added successfully and saved for future use.");
-  }
-
-  function supplierSelectionChanged() {
-    // Supplier selection is already handled by the dropdown.
-  }
-
-  // Load suppliers when page opens.
-  loadSuppliers();
-
-  // =========================================================
-  // Excel attachment
-  // =========================================================
-  let selectedExcelFile = null;
-
-  function excelSelected(input) {
-
-    const file = input.files[0];
-
-    if (!file) {
-      selectedExcelFile = null;
-      document.getElementById("excelFileName").innerText = "";
-      return;
     }
 
-    const allowedExtensions = [".xlsx", ".xls", ".xlsm"];
-    const fileName = file.name.toLowerCase();
 
-    const valid = allowedExtensions.some(
-      ext => fileName.endsWith(ext)
-    );
 
-    if (!valid) {
-      alert("Please select an Excel file (.xlsx, .xls, or .xlsm).");
-
-      input.value = "";
-      selectedExcelFile = null;
-
-      document.getElementById("excelFileName").innerText = "";
-      return;
-    }
-
-    selectedExcelFile = file;
-
-    document.getElementById("excelFileName").innerText =
-      "📎 " + file.name;
-  }
-
-  // =========================================================
-  // Convert file to Base64
-  // =========================================================
-  const toBase64 = file => new Promise((resolve, reject) => {
-
-    const reader = new FileReader();
-
-    reader.readAsDataURL(file);
-
-    reader.onload = () => {
-      resolve(reader.result.split(",")[1]);
-    };
-
-    reader.onerror = error => reject(error);
-  });
-
-  // =========================================================
-  // Submit
-  // =========================================================
-  async function submitData() {
-
-    const form = document.getElementById("schedulingForm");
-
-    if (!form.checkValidity()) {
-      form.reportValidity();
-      return;
-    }
-
-    if (!selectedExcelFile) {
-      alert("Please attach the required Excel file.");
-      document.getElementById("excelAttachment").focus();
-      return;
-    }
-
-    const submitBtn = document.getElementById("submitBtn");
-
-    submitBtn.disabled = true;
-    submitBtn.innerText = "SUBMITTING...";
-
-    try {
-
-      const excelBase64 = await toBase64(selectedExcelFile);
-
-      const scheduledDate =
-        document.getElementById("scheduledDate").value;
-
-      const scheduledHour =
-        document.getElementById("scheduledHour").value;
-
-      const scheduledMinute =
-        document.getElementById("scheduledMinute").value;
-
-      const payload = {
-
-        SubSegment:
-          document.getElementById("subSegment").value,
-
-        Task:
-          document.getElementById("task").value,
-
-        SupplierName:
-          document.getElementById("supplierName").value,
-
-        ScheduledDate:
-          scheduledDate,
-
-        ScheduledTime:
-          scheduledHour + ":" + scheduledMinute,
-
-        ExcelFileName:
-          selectedExcelFile.name,
-
-        ExcelFileType:
-          selectedExcelFile.type ||
-          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-
-        ExcelFileContent:
-          excelBase64
-      };
-
-      // Existing Power Automate endpoint.
-      const powerAutomateUrl =
-        "https://default9a6490bbfe8f4efe8f5ae093648e82.35.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/15/workflows/e68e3512303e4c338d5fcdeb03c09786/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=KoMBrglBYqPhhyKuzNL8wCKaNxhYn1_HMyeX0n2LGmQ";
-
-      const response = await fetch(powerAutomateUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(payload)
-      });
-
-      if (response.ok || response.status === 202) {
-
-        alert("Submitted successfully.");
-
-        form.reset();
-
-        selectedExcelFile = null;
-
-        document.getElementById("excelFileName").innerText = "";
+    document.addEventListener(
+      "DOMContentLoaded",
+      function () {
 
         loadSuppliers();
 
-      } else {
+      }
+    );
 
-        alert("Submission failed. Please try again.");
+
+
+    let selectedExcelFile = null;
+
+
+    function excelSelected(input) {
+
+      const file =
+        input.files[0];
+
+
+      if (!file) {
+
+        selectedExcelFile = null;
+
+        document.getElementById(
+          "excelFileName"
+        ).innerText = "";
+
+        return;
+
       }
 
-    } catch (error) {
 
-      console.error(error);
+      const allowedExtensions = [
 
-      alert(
-        "Error connecting to server. Please check the connection."
-      );
+        ".xlsx",
+        ".xls",
+        ".xlsm"
 
-    } finally {
+      ];
 
-      submitBtn.disabled = false;
-      submitBtn.innerText = "SUBMIT";
+
+      const fileName =
+        file.name.toLowerCase();
+
+
+      const valid =
+        allowedExtensions.some(
+          ext =>
+            fileName.endsWith(ext)
+        );
+
+
+      if (!valid) {
+
+        alert(
+          "Please select an Excel file (.xlsx, .xls, or .xlsm)."
+        );
+
+
+        input.value = "";
+
+
+        selectedExcelFile = null;
+
+
+        document.getElementById(
+          "excelFileName"
+        ).innerText = "";
+
+
+        return;
+
+      }
+
+
+      selectedExcelFile =
+        file;
+
+
+      document.getElementById(
+        "excelFileName"
+      ).innerText =
+        "📎 " + file.name;
+
     }
-  }
 
-</script>
+
+
+    const toBase64 =
+      file =>
+        new Promise(
+          (resolve, reject) => {
+
+            const reader =
+              new FileReader();
+
+
+            reader.readAsDataURL(
+              file
+            );
+
+
+            reader.onload =
+              () => {
+
+                resolve(
+                  reader.result.split(
+                    ","
+                  )[1]
+                );
+
+              };
+
+
+            reader.onerror =
+              error =>
+                reject(error);
+
+          }
+        );
+
+
+
+
+    async function submitData() {
+
+      const form =
+        document.getElementById(
+          "schedulingForm"
+        );
+
+
+
+      if (!form.checkValidity()) {
+
+        form.reportValidity();
+
+        return;
+
+      }
+
+
+      if (!selectedExcelFile) {
+
+        alert(
+          "Please attach the required Excel file."
+        );
+
+
+        document.getElementById(
+          "excelAttachment"
+        ).focus();
+
+
+        return;
+
+      }
+
+
+      const submitBtn =
+        document.getElementById(
+          "submitBtn"
+        );
+
+
+      submitBtn.disabled =
+        true;
+
+
+      submitBtn.innerText =
+        "SUBMITTING...";
+
+
+      try {
+
+
+        const excelBase64 =
+          await toBase64(
+            selectedExcelFile
+          );
+
+
+
+
+        const scheduledDate =
+          document.getElementById(
+            "scheduledDate"
+          ).value;
+
+
+
+
+        const scheduledHour =
+          document.getElementById(
+            "scheduledHour"
+          ).value;
+
+
+
+        const scheduledMinute =
+          document.getElementById(
+            "scheduledMinute"
+          ).value;
+
+
+        const payload = {
+
+          SubSegment:
+            document.getElementById(
+              "subSegment"
+            ).value,
+
+
+          Task:
+            document.getElementById(
+              "task"
+            ).value,
+
+
+          SupplierName:
+            document.getElementById(
+              "supplierName"
+            ).value,
+
+
+          ScheduledDate:
+            scheduledDate,
+
+
+          ScheduledTime:
+            scheduledHour +
+            ":" +
+            scheduledMinute,
+
+
+          ExcelFileName:
+            selectedExcelFile.name,
+
+
+          ExcelFileType:
+            selectedExcelFile.type ||
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+
+
+          ExcelFileContent:
+            excelBase64
+
+        };
+
+        const powerAutomateUrl =
+          "https://default9a6490bbfe8f4efe8f5ae093648e82.35.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/15/workflows/e68e3512303e4c338d5fcdeb03c09786/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=KoMBrglBYqPhhyKuzNL8wCKaNxhYn1_HMyeX0n2LGmQ";
+
+
+        // =====================================================
+        // Send to Power Automate
+        // =====================================================
+
+        const response =
+          await fetch(
+            powerAutomateUrl,
+            {
+
+              method: "POST",
+
+              headers: {
+
+                "Content-Type":
+                  "application/json"
+
+              },
+
+              body:
+                JSON.stringify(
+                  payload
+                )
+
+            }
+          );
+
+
+        if (
+          response.ok ||
+          response.status === 202
+        ) {
+
+          alert(
+            "Submitted successfully."
+          );
+
+
+          form.reset();
+
+
+          selectedExcelFile =
+            null;
+
+
+          document.getElementById(
+            "excelFileName"
+          ).innerText = "";
+
+
+          // Reload suppliers
+          loadSuppliers();
+
+        }
+
+        else {
+
+          alert(
+            "Submission failed. Please try again."
+          );
+
+        }
+
+      }
+
+      catch (error) {
+
+        console.error(
+          error
+        );
+
+
+        alert(
+          "Error connecting to server. Please check the connection."
+        );
+
+      }
+
+      finally {
+
+        submitBtn.disabled =
+          false;
+
+
+        submitBtn.innerText =
+          "SUBMIT";
+
+      }
+
+    }
+
+  </script>
 
 </body>
+
 </html>
